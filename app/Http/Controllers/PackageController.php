@@ -49,7 +49,8 @@ class PackageController extends Controller
      */
     public function show($id)
     {
-        //
+        $package = Package::where('id',$id)->get();
+        return response()->json($package);
     }
 
     /**

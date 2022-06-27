@@ -10,6 +10,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Resources\ProgramResource;
+use App\Models\Mbkm;
 use App\Models\Program;
 
 /*
@@ -35,7 +36,13 @@ Route::resource('programs', ProgramController::class);
 Route::resource('schedules', ScheduleController::class);
 Route::resource('sections', SectionController::class);
 Route::resource('semesters', SemesterController::class);
-Route::post('/mbkm/{$id}', [App\Http\Controllers\MbkmController::class,'store']);
+Route::resource('mbkms', MbkmController::class);
+Route::get('/mbkm/show2/{mbkm}', [App\Http\Controllers\MbkmController::class, 'show2']);
+Route::get('/mbkm/show3/{mbkm}/{section}', [App\Http\Controllers\MbkmController::class, 'show3']);
+Route::post('/student/store', [App\Http\Controllers\StudentController::class, 'store']);
+Route::get('/student', [App\Http\Controllers\StudentController::class, 'index']);
+Route::get('/student/show/{id}', [App\Http\Controllers\StudentController::class, 'show']);
+// Route::post('/mbkm/store', [App\Http\Controllers\MbkmController::class,'store']);
 
 Route::group([
 

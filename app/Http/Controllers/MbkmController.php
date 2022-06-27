@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Package;
+use App\Http\Resources\MbkmPackageResource;
+use App\Models\Mbkm;
 use Illuminate\Http\Request;
+use App\Helpers\ResponseFormatter;
+use App\Http\Resources\MbkmResource;
+use App\Models\Package;
+use App\Models\Section;
 
 class MbkmController extends Controller
 {
@@ -14,7 +19,7 @@ class MbkmController extends Controller
      */
     public function index()
     {
-        // return MbkmPackageResource::collection(::all());
+        return MbkmPackageResource::collection(Mbkm::all());
     }
 
     /**
@@ -33,12 +38,11 @@ class MbkmController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
-        dd($request->section_id);
-        $package = Package::find($id);
-        $package->section()->attach([$request->section_id]);
-        return request()->json(['message'=>'Success']);
+        $input = $request->all();
+        $mbkm = Mbkm::create($input);
+        return new MbkmPackageResource($mbkm);
     }
 
     /**
@@ -50,6 +54,29 @@ class MbkmController extends Controller
     public function show($id)
     {
         //
+        $mbkmid = Mbkm::where('package_id',$id)->get('section_id');
+        $section = Section::find($mbkmid);
+        return response()->json($section);
+    }
+
+    public function show2($package_id)
+    {
+        $mbkmid = Mbkm::where('package_id',$package_id)->get();
+        return response()->json($mbkmid);
+    }
+
+    public function show3($package_id , $section_id)
+    {
+        $mbkmid = Mbkm::where('package_id',$package_id)->where('section_id', $section_id)->get('section_id');
+        // if($mbkmid->section_id) return response()->json([
+        //     'status'=>500
+        // ]);
+        $mbkm = json_decode($mbkmid);
+        if (!$mbkm){
+            return response()->json(false);
+        }else{
+            return response()->json(true);
+        }
     }
 
     /**
@@ -73,6 +100,9 @@ class MbkmController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $Mbkm = Mbkm::find($id);
+        $Mbkm->update($request->all());
+        return new MbkmPackageResource($Mbkm);
     }
 
     /**
@@ -84,5 +114,8 @@ class MbkmController extends Controller
     public function destroy($id)
     {
         //
+        $Mbkm = Mbkm::find($id);
+        $Mbkm->delete();
+        return response()->json(null);
     }
 }

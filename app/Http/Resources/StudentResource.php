@@ -3,10 +3,9 @@
 namespace App\Http\Resources;
 
 use App\Models\Package;
-use App\Models\Section;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MbkmPackageResource extends JsonResource
+class StudentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +16,11 @@ class MbkmPackageResource extends JsonResource
     public function toArray($request)
     {
         $packages = Package::find($this->package_id);
-        $section = Section::find($this->section_id);
         return[
             'id'=>$this->id,
             'package_id'=>$packages,
-            'section_id'=>$section,
+            'nim'=>$this->nim,
+            'nama_mahasiswa'=>$this->nama,
             'deleted_at'=>$this->deleted_at,
             'created_at'=>$this->created_at,
             'updated_at'=>$this->updated_at
